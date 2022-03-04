@@ -17,9 +17,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('stripe', [StripeController::class, 'stripe']);
 
-// Route::post('stripe', [StripeController::class, 'stripePost'])->name('stripe.post');
 
 Route::get('stripe', [StripeController::class, 'index']);
 Route::post('payment-process', [StripeController::class, 'process'])->name('payment.process');
+
+
+Route::get('pagos',  [StripeController::class, 'pagos']);
+Route::post('payStripe',  [StripeController::class, 'payStripe'])->name("payStripe");
