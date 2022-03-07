@@ -21,11 +21,22 @@ class StripeController extends Controller
    {
     
     //  dd("Aqui", $request->all(), $request->get('tokenId'), $request->get('amount'));
+        // dd($request->all()) 
+        // HAcer consultas con el id -> precio * 100
+        // descripcion del prodcuto de la base (id+descripcion)
+        // metadata 
        $stripe = Stripe::charges()->create([
            'source' => $request->get('tokenId'),
-           'currency' => 'USD',
-           'amount' => $request->get('amount') * 100
+           'currency' => 'MXN',
+           'amount' => $request->get('amount') * 100, 
+           "metadata" => ["order_id" => "6735"],
+           'description' => 'My First Test Charge (created for API docs)',
        ]);
+
+       //Order id -> respuesta de la transaccion
+       // Armar una tabla de pagos
+       // 
+       //
  
        return $stripe;
    }

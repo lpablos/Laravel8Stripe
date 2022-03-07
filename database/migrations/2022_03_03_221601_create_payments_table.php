@@ -15,10 +15,17 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->string('s_payment_id'); // stripe payment id
-            $table->string('user_id');
-            $table->string('product_id');
-            $table->string('amount');
+            $table->integer('amount'); 
+            $table->string('billing_details_name');
+            $table->date('created');
+            $table->string('currency');
+            $table->bigInteger('stripe_id');
+            $table->string('payment_method');
+            $table->string('payment_method_card_fingerprint');
+            $table->string('status');
+            $table->string('outcome_network_status');
+            $table->string('outcome_reason');
+            $table->string('outcome_seller_message');            
             $table->timestamps();
         });
     }

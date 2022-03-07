@@ -73,11 +73,11 @@ function stripePay(amount) {
             })
         }
     });
-    handler.open({
-        name: 'Demo Site',
-        description: '2 widgets',
-        amount: amount * 100
-    });
+    // handler.open({
+    //     name: 'Demo Site',
+    //     description: '2 widgets',
+    //     amount: amount 
+    // });
 } 
 </script>
    </body>
