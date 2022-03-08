@@ -27,15 +27,16 @@ class StripeController extends Controller
         // metadata 
         
         $product = Product::find($request['identy']);
-        
+   
         $stripe = Stripe::charges()->create([
             'source' => $request->get('tokenId'),
             'currency' => 'MXN',
-            'amount' => $product->price * 100, 
+            'amount' => $product->price*100, 
             "metadata" => ["product_id" => $product->id],
             'description' => 'My First Test Charge (created for API docs)',
         ]);
-        // dd($stripe['payment_method_details']['card']['fingerprint']);
+        
+        $response = json_encode($stripe);
         $payment = new Payment;
         $payment->amount = $stripe['amount'];
         $payment->billing_details_name = $stripe['billing_details']['name'];
@@ -48,6 +49,10 @@ class StripeController extends Controller
         $payment->outcome_network_status = $stripe['outcome']['network_status'];
         $payment->outcome_reason = $stripe['outcome']['reason'] ?: '';
         $payment->outcome_seller_message = $stripe['outcome']['seller_message'];
+        $payment->metadata_product_id = $stripe['metadata']['product_id'];
+        $payment->source_id =$stripe['source']['id'];
+        $payment->response =$response;   
+        
         $payment->save();
 
         

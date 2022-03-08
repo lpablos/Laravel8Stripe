@@ -24,8 +24,11 @@ class CreatePaymentsTable extends Migration
             $table->string('payment_method_card_fingerprint');
             $table->string('status');
             $table->string('outcome_network_status');
-            $table->string('outcome_reason');
-            $table->string('outcome_seller_message');            
+            $table->string('outcome_reason')->nullable();
+            $table->string('outcome_seller_message'); 
+            $table->string('metadata_product_id'); 
+            $table->string('source_id'); 
+            $table->text('response');            
             $table->timestamps();
         });
     }
