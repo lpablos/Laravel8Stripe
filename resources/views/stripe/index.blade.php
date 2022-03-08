@@ -77,8 +77,7 @@ function stripePay(identy, amount) {
             })
         }
     });
-    handler.open({
-         theme: 'night',
+    handler.open({        
          name: 'Beneflex',
          description: '2 widgets',
          amount: amount*100
