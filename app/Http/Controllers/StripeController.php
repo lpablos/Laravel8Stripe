@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Payment;
+use App\Models\Product;
 use Session;
 use Stripe;
+use Carbon\Carbon;
 
 
 class StripeController extends Controller
@@ -15,23 +17,47 @@ class StripeController extends Controller
 
     public function index()
     {
-      return view('stripe.index');
+        $products = Product::all();        
+        return view('stripe.index', compact('products'));
     }
    public function process(Request $request)
    {
-    
-    //  dd("Aqui", $request->all(), $request->get('tokenId'), $request->get('amount'));
-        // dd($request->all()) 
-        // HAcer consultas con el id -> precio * 100
+        // Hacer consultas con el id -> precio * 100
         // descripcion del prodcuto de la base (id+descripcion)
         // metadata 
-       $stripe = Stripe::charges()->create([
-           'source' => $request->get('tokenId'),
-           'currency' => 'MXN',
-           'amount' => $request->get('amount') * 100, 
-           "metadata" => ["order_id" => "6735"],
-           'description' => 'My First Test Charge (created for API docs)',
-       ]);
+        
+        $product = Product::find($request['identy']);
+        
+        $stripe = Stripe::charges()->create([
+            'source' => $request->get('tokenId'),
+            'currency' => 'MXN',
+            'amount' => $product->price * 100, 
+            "metadata" => ["product_id" => $product->id],
+            'description' => 'My First Test Charge (created for API docs)',
+        ]);
+        // dd($stripe['payment_method_details']['card']['fingerprint']);
+        $payment = new Payment;
+        $payment->amount = $stripe['amount'];
+        $payment->billing_details_name = $stripe['billing_details']['name'];
+        $payment->created = Carbon::parse($stripe['created']);
+        $payment->currency = $stripe['currency'];
+        $payment->stripe_id = $stripe['id'];
+        $payment->payment_method = $stripe['payment_method'];
+        $payment->payment_method_card_fingerprint = $stripe['payment_method_details']['card']['fingerprint'];
+        $payment->status = $stripe['status'];
+        $payment->outcome_network_status = $stripe['outcome']['network_status'];
+        $payment->outcome_reason = $stripe['outcome']['reason'] ?: '';
+        $payment->outcome_seller_message = $stripe['outcome']['seller_message'];
+        $payment->save();
+
+        
+        // $stripe = Stripe::charges()->create([
+        //     'source' => $request->get('tokenId'),
+        //     'currency' => 'MXN',
+        //     'amount' => $request->get('amount') * 100, 
+        //     "metadata" => ["order_id" => "6735"],
+        //     'description' => 'My First Test Charge (created for API docs)',
+        // ]);
 
        //Order id -> respuesta de la transaccion
        // Armar una tabla de pagos

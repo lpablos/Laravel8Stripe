@@ -19,7 +19,7 @@ class CreatePaymentsTable extends Migration
             $table->string('billing_details_name');
             $table->date('created');
             $table->string('currency');
-            $table->bigInteger('stripe_id');
+            $table->string('stripe_id');
             $table->string('payment_method');
             $table->string('payment_method_card_fingerprint');
             $table->string('status');

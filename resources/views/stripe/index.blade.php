@@ -25,15 +25,17 @@
             </div>
          </div>
          <div class="row">
-            <div class="col-md-4">
-               <button class="btn btn-primary btn-block" onclick="stripePay(10)">Pay $10</button>
+            @foreach ( $products as $product)
+               <div class="col-md-4">
+                  <button class="btn btn-primary btn-block" onclick="stripePay({{$product->id}},{{$product->price}})">{{$product->name}} ${{$product->price}}</button>
+               </div>                
+            @endforeach
+            {{-- <div class="col-md-4">
+               <button class="btn btn-success btn-block" onclick="stripePay(50,2)">Pay $50</button>
             </div>
             <div class="col-md-4">
-               <button class="btn btn-success btn-block" onclick="stripePay(50)">Pay $50</button>
-            </div>
-            <div class="col-md-4">
-               <button class="btn btn-info btn-block" onclick="stripePay(100)">Pay $100</button>
-            </div>
+               <button class="btn btn-info btn-block" onclick="stripePay(100,3)">Pay $100</button>
+            </div> --}}
          </div>
       </div>
 <script src = "https://checkout.stripe.com/checkout.js" > </script> 
@@ -46,7 +48,8 @@
         });
     });
 
-function stripePay(amount) {
+function stripePay(identy, amount) {
+   // console.log(amount,identy);
     var handler = StripeCheckout.configure({
         key: 'pk_test_gsQNMTguJLdYgr3cR1h26mpF', // your publisher key id
         locale: 'auto',
@@ -61,7 +64,8 @@ function stripePay(amount) {
                 method: 'post',
                 data: {
                     tokenId: token.id,
-                    amount: amount
+                    amount: amount,
+                    identy: identy
                 },
                 success: (response) => {
                     console.log(response)
@@ -73,11 +77,12 @@ function stripePay(amount) {
             })
         }
     });
-    // handler.open({
-    //     name: 'Demo Site',
-    //     description: '2 widgets',
-    //     amount: amount 
-    // });
+    handler.open({
+         theme: 'night',
+         name: 'Beneflex',
+         description: '2 widgets',
+         amount: amount*100
+    });
 } 
 </script>
    </body>
