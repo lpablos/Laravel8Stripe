@@ -31,14 +31,14 @@ class StripeController extends Controller
         $stripe = Stripe::charges()->create([
             'source' => $request->get('tokenId'),
             'currency' => 'MXN',
-            'amount' => $product->price*100, 
+            'amount' => $product->price, 
             "metadata" => ["product_id" => $product->id],
             'description' => 'My First Test Charge (created for API docs)',
         ]);
         
         $response = json_encode($stripe);
         $payment = new Payment;
-        $payment->amount = $stripe['amount'];
+        $payment->amount = ($stripe['amount']/100);
         $payment->billing_details_name = $stripe['billing_details']['name'];
         $payment->created = Carbon::parse($stripe['created']);
         $payment->currency = $stripe['currency'];
@@ -52,7 +52,6 @@ class StripeController extends Controller
         $payment->metadata_product_id = $stripe['metadata']['product_id'];
         $payment->source_id =$stripe['source']['id'];
         $payment->response =$response;   
-        
         $payment->save();
 
         
